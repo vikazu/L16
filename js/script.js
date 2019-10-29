@@ -90,4 +90,38 @@ window.addEventListener('DOMContentLoaded', function () {
         document.body.style.overflow = '';
     });
     //Ending of an modal window
+    //Beginning of a form
+    let message = {
+        loading: 'Loading...',
+        success: 'Thank you! We will call you soon!',
+        failure: 'Something is wrong!'
+    };
+    let form = document.querySelector('.main-form'),
+        input = form.getElementsByTagName('input'),
+        statusMessage = document.createElement('div');
+    statusMessage.classList.add('status');
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        form.appendChild(statusMessage);
+
+        let request = new XMLHttpRequest();
+        request.open('POST', 'server.php');
+        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        let formData = new FormData(form);
+        request.send(formData);
+        request.addEventListener('readystatechange', function(){
+            if (request.readyState < 4) {
+                statusMessage.innerHTML = message.loading;
+            } else if(request.readyState === 4 && request.status === 200){
+                statusMessage.innerHTML = message.success;
+            } else {
+                statusMessage.innerHTML = message.failure;
+            }
+            });
+    });
+
+
+    //Ending of a form
+
 });
